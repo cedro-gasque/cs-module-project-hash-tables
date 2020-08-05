@@ -1,14 +1,4 @@
-class HashTableEntry:
-    """
-    Linked List hash table key/value pair
-    """
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
-
-# Hash table can't have fewer than this many slots
-MIN_CAPACITY = 8
+import double_linked_list
 
 
 class HashTable:
@@ -20,8 +10,7 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        self.table = list(capacity)
-        for i in range()
+        self.table = [None] * capacity
 
 
     def get_num_slots(self):
@@ -35,6 +24,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return len(self.table)
 
 
     def get_load_factor(self):
@@ -63,6 +53,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for c in key:
+            hash = ((hash << 5) + hash) ^ ord(c) & 0xffffffff
+        return hash
 
 
     def hash_index(self, key):
@@ -81,7 +75,12 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        node = ListNode(key, value)
+        if self.table[index] is None:
+            self.table[index] = DoublyLinkedList(node)
+        else:
+            self.table[index].add_to_tail(node)
 
 
     def delete(self, key):
@@ -93,6 +92,11 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        if self.table[index] and self.table[index].delete(self.table[index].get(key))
+            pass
+        else:
+            print("Error: key not found")
 
 
     def get(self, key):
