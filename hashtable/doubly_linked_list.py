@@ -34,9 +34,9 @@ class DoublyLinkedList:
     as the new head of the list. Don't forget to handle
     the old head node's previous pointer accordingly.
     """
-    def add_to_head(self, value):
+    def add_to_head(self, key, value):
         head = self.head
-        node = ListNode(value, prev=None, next=head)
+        node = ListNode(key, value, prev=None, next=head)
         if head is None:
             self.tail = node
         else:
@@ -61,9 +61,9 @@ class DoublyLinkedList:
     as the new tail of the list. Don't forget to handle
     the old tail node's next pointer accordingly.
     """
-    def add_to_tail(self, value):
+    def add_to_tail(self, key, value):
         tail = self.tail
-        node = ListNode(value, prev=tail, next=None)
+        node = ListNode(key, value, prev=tail, next=None)
         if tail is None:
             self.head = node
         else:

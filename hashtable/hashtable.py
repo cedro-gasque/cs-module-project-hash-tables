@@ -1,4 +1,4 @@
-import double_linked_list
+from doubly_linked_list import ListNode, DoublyLinkedList
 
 
 class HashTable:
@@ -11,7 +11,7 @@ class HashTable:
 
     def __init__(self, capacity):
         self.table = [None] * capacity
-
+        self.capacity = capacity
 
     def get_num_slots(self):
         """
@@ -76,11 +76,10 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        node = ListNode(key, value)
         if self.table[index] is None:
-            self.table[index] = DoublyLinkedList(node)
+            self.table[index] = DoublyLinkedList(ListNode(key, value))
         else:
-            self.table[index].add_to_tail(node)
+            self.table[index].add_to_tail(key, value)
 
 
     def delete(self, key):
@@ -93,7 +92,7 @@ class HashTable:
         """
         # Your code here
         index = self.hash_index(key)
-        if self.table[index] and self.table[index].delete(self.table[index].get(key))
+        if self.table[index] and self.table[index].delete(self.table[index].get(key)):
             pass
         else:
             print("Error: key not found")
