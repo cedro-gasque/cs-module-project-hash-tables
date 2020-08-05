@@ -140,3 +140,19 @@ class DoublyLinkedList:
                 break
             current = current.next
         return current
+
+    def to_list(self):
+        output = []
+        current = self.head
+        while current:
+            output.append((current.key, current.value))
+            current = current.next
+        return output
+
+    def __repr__(self):
+        string = "{"
+        current = self.head
+        while current:
+            string += f"{current.key}: {current.value},\n"
+            current = current.next
+        return string + "}"

@@ -1,5 +1,6 @@
-from doubly_linked_list import ListNode, DoublyLinkedList
+from doubly_linked_list import DoublyLinkedList
 
+MIN_CAPACITY = 8
 
 class HashTable:
     """
@@ -10,8 +11,9 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        self.table = [None] * capacity
+        self.table = [DoublyLinkedList()] * capacity
         self.capacity = capacity
+        self.count = 0
 
     def get_num_slots(self):
         """
@@ -24,7 +26,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        return len(self.table)
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -34,6 +36,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.count / self.capacity
 
 
     def fnv1(self, key):
@@ -76,10 +79,15 @@ class HashTable:
         Implement this.
         """
         index = self.hash_index(key)
-        if self.table[index] is None:
-            self.table[index] = DoublyLinkedList(ListNode(key, value))
+        node = self.table[index].get(key)
+        if node:
+            node.key = key
+            node.value = value
         else:
             self.table[index].add_to_tail(key, value)
+            self.count += 1
+        if self.get_load_factor() > 0.7:
+            self.resize(self.capacity * 2)
 
 
     def delete(self, key):
@@ -93,7 +101,9 @@ class HashTable:
         # Your code here
         index = self.hash_index(key)
         if self.table[index] and self.table[index].delete(self.table[index].get(key)):
-            pass
+            self.count -= 1
+            if self.capacity > MIN_CAPACITY and self.get_load_factor() < 0.2:
+                self.resize(self.capacity // 2)
         else:
             print("Error: key not found")
 
@@ -107,9 +117,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        if self.table[index]:
+            node = self.table[index].get(key)
+            if node:
+                return node.value
 
 
-    def resize(self, new_capacity):
+    def resize(self, capacity):
         """
         Changes the capacity of the hash table and
         rehashes all key/value pairs.
@@ -117,7 +132,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        items = []
+        self.count = 0
+        for bucket in self.table:
+            if bucket:
+                items.extend(bucket.to_list())
+        self.capacity = capacity
+        self.table = [DoublyLinkedList()] * self.capacity
+        for item in items:
+            self.put(item[0], item[1])
 
 
 if __name__ == "__main__":
