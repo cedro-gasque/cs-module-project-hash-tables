@@ -1,7 +1,16 @@
+SPECIAL_CHARACTERS = '" : ; , . - + = / \ | [ ] { } ( ) * ^ &'.split()
+
 def word_count(s):
     # Your code here
 
-
+    w = dict()
+    words = ''.join(filter(lambda x : x not in SPECIAL_CHARACTERS, s)).lower().split()
+    for word in words:
+        if word in w:
+            w[word] += 1
+        else:
+            w[word] = 1
+    return w
 
 if __name__ == "__main__":
     print(word_count(""))

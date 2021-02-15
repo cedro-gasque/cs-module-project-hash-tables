@@ -1,16 +1,6 @@
-class HashTableEntry:
-    """
-    Linked List hash table key/value pair
-    """
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
-        self.next = None
+from doubly_linked_list import DoublyLinkedList
 
-
-# Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
-
 
 class HashTable:
     """
@@ -21,8 +11,9 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        # Your code here
-
+        self.table = [DoublyLinkedList()] * capacity
+        self.capacity = capacity
+        self.count = 0
 
     def get_num_slots(self):
         """
@@ -35,6 +26,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -44,6 +36,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.count / self.capacity
 
 
     def fnv1(self, key):
@@ -63,6 +56,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for c in key:
+            hash = ((hash << 5) + hash) ^ ord(c) & 0xffffffff
+        return hash
 
 
     def hash_index(self, key):
@@ -81,7 +78,16 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        index = self.hash_index(key)
+        node = self.table[index].get(key)
+        if node:
+            node.key = key
+            node.value = value
+        else:
+            self.table[index].add_to_tail(key, value)
+            self.count += 1
+        if self.get_load_factor() > 0.7:
+            self.resize(self.capacity * 2)
 
 
     def delete(self, key):
@@ -93,6 +99,13 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        if self.table[index] and self.table[index].delete(self.table[index].get(key)):
+            self.count -= 1
+            if self.capacity > MIN_CAPACITY and self.get_load_factor() < 0.2:
+                self.resize(self.capacity // 2)
+        else:
+            print("Error: key not found")
 
 
     def get(self, key):
@@ -104,9 +117,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        if self.table[index]:
+            node = self.table[index].get(key)
+            if node:
+                return node.value
 
 
-    def resize(self, new_capacity):
+    def resize(self, capacity):
         """
         Changes the capacity of the hash table and
         rehashes all key/value pairs.
@@ -114,7 +132,15 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        items = []
+        self.count = 0
+        for bucket in self.table:
+            if bucket:
+                items.extend(bucket.to_list())
+        self.capacity = capacity
+        self.table = [DoublyLinkedList()] * self.capacity
+        for item in items:
+            self.put(item[0], item[1])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 # Your code here
-
+import math
+import random
 
 def slowfun_too_slow(x, y):
     v = math.pow(x, y)
@@ -8,14 +9,16 @@ def slowfun_too_slow(x, y):
     v %= 982451653
 
     return v
-
+cache = dict()
 def slowfun(x, y):
     """
     Rewrite slowfun_too_slow() in here so that the program produces the same
     output, but completes quickly instead of taking ages to run.
     """
     # Your code here
-
+    if not (x, y) in cache:
+        cache[(x, y)] = slowfun_too_slow(x, y)
+    return cache[(x, y)]
 
 
 # Do not modify below this line!
